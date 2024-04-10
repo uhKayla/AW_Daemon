@@ -41,28 +41,29 @@ public class ActivationHandler
             if (response.StatusCode == 200)
             {
                 await user.AddRoleAsync(RoleId);
-                await command.RespondAsync("Success!");
+                await command.FollowupAsync("Success!");
             }
             else if (response.StatusCode == 409)
             {
-                await command.RespondAsync("It appears this account is already linked to a Discord account. Please contact support if this is a mistake...");
+                await command.FollowupAsync("It appears this account is already linked to a Discord account. Please contact support if this is a mistake...");
             }
             else if (response.StatusCode == 500)
             {
-                await command.RespondAsync("I ran into an internal server problem! If it has not been reported, please report it to support so we can sort it out!: 500");
+                await command.FollowupAsync("I ran into an internal server problem! If it has not been reported, please report it to support so we can sort it out!: 500");
             }
             else if (response.StatusCode == 404)
             {
-                await command.RespondAsync("I couldn't find your account! Maybe try activating with an email address or VRChat ID...");
+                await command.FollowupAsync("I couldn't find your account! Maybe try activating with an email address or VRChat ID...");
             }
             else
             {
-                await command.RespondAsync($"Something went wrong! I don't understand this error code, please report it to support!: {response.StatusCode}");
+                await command.FollowupAsync($"Something went wrong! I don't understand this error code, please report it to support!: {response.StatusCode}");
             }
         }
         catch (Exception e)
         {
-            await command.RespondAsync("uh oh" + e);
+            await command.FollowupAsync("uh oh");
+            Console.WriteLine(e);
         }
     }
 

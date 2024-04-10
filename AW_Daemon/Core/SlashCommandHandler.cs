@@ -8,9 +8,7 @@ public class SlashCommandHandler
     private readonly DiscordSocketClient _client;
     private readonly InteractionService _interactionService;
     private readonly ActivationHandler _activationHandler;
-
-    private const ulong RoleTestId = 701517732159422526;
-
+    
     public SlashCommandHandler(DiscordSocketClient client, InteractionService interactionService, ActivationHandler activationHandler)
     {
         _client = client;
@@ -22,7 +20,6 @@ public class SlashCommandHandler
     {
         try
         {
-            // Directly use command.Guild to access the SocketGuild as needed within this method
             switch (command.Data.Name)
             {
                 case "test":
@@ -56,9 +53,11 @@ public class SlashCommandHandler
             switch (commandOption)
             {
                 case 1:
+                    await command.DeferAsync();
                     await _activationHandler.HandleDiscordUsernameActivation(command);
                     break;
                 case 2:
+                    await command.RespondAsync("I'm sending you a DM, please make sure you allow DMs from this server.");
                     await _activationHandler.HandleEmailActivation(command);
                     break;
                 default:

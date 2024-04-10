@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using AW_Daemon.Utilities;
 
 namespace AW_Daemon;
 
@@ -13,9 +14,9 @@ public class WebRequestHelper
     {
         try
         {
-            HttpResponseMessage response = await _httpClient.GetAsync(url);
+            var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
             return new ResponseClass
             {
                 StatusCode = (int)response.StatusCode,
@@ -35,11 +36,25 @@ public class WebRequestHelper
     
     public static async Task<ResponseClass> MakePostRequestAsync(string url,  string body)
     {
+        // HMAC
+        var secret = Environment.GetEnvironmentVariable("HMAC");
+        if (string.IsNullOrWhiteSpace(secret))
+        {
+            throw new Exception("HMAC Environment Variable is blank or missing! Please add your key!");
+        }
+        var signature = HMACHelper.ComputeHMACSHA256Signature(body, secret);
+        _httpClient.DefaultRequestHeaders.Clear();
+        _httpClient.DefaultRequestHeaders.Add("X-Signature", signature);
+        
+        Console.WriteLine($"Message {body}");
+        Console.WriteLine($"Key {secret}");
+        Console.WriteLine($"Signature {signature}");
+        
+        // Request
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
-
-        HttpResponseMessage response = await _httpClient.PostAsync(url, content);
-        // response.EnsureSuccessStatusCode();
-        string responseBody = await response.Content.ReadAsStringAsync();
+        
+        var response = await _httpClient.PostAsync(url, content);
+        var responseBody = await response.Content.ReadAsStringAsync();
         return new ResponseClass
         {
             StatusCode = (int)response.StatusCode,
