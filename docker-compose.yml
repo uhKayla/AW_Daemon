@@ -1,0 +1,8 @@
+﻿services:
+  aw_daemon:
+    image: aw_daemon
+    build:
+      context: .
+      dockerfile: AW_Daemon/Dockerfile
+    env_file:
+      - ./AW_Daemon/.env
