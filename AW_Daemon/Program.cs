@@ -89,11 +89,11 @@ public class Program
         _client.SlashCommandExecuted += async command => { await commandHandler.SlashCommand(command); };
         
         // Commands
-        var guildCommand = new SlashCommandBuilder()
-            .WithName("test")
-            .WithDescription("This is my first guild slash command!")
-            .AddOption("user", ApplicationCommandOptionType.User, "The users whos roles you want to be listed", true)
-            .Build();
+        // var guildCommand = new SlashCommandBuilder()
+        //     .WithName("test")
+        //     .WithDescription("This is my first guild slash command!")
+        //     .AddOption("user", ApplicationCommandOptionType.User, "The users whos roles you want to be listed", true)
+        //     .Build();
 
         var activateCommand = new SlashCommandBuilder()
             .WithName("verify")
@@ -111,7 +111,7 @@ public class Program
         try
         {
             await Guild.DeleteApplicationCommandsAsync();
-            await Guild.CreateApplicationCommandAsync(guildCommand);
+            // await Guild.CreateApplicationCommandAsync(guildCommand);
             await Guild.CreateApplicationCommandAsync(activateCommand);
             // await Guild.CreateApplicationCommandAsync(orderRegisterCommand);
             
